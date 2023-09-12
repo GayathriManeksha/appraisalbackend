@@ -129,4 +129,39 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while evaluating responsibility fulfillment questions.' });
     }
 });
+
+// API endpoint for the evaluator to evaluate knowledge based questions and submit scores
+router.post('/evaluate-knowledge-based', async (req, res) => {
+    try {
+        const { userId, responses } = req.body;
+
+        // Find the SelfAppraisal document by userId
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+
+        if (!selfAppraisal) {
+            return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
+        }
+
+        // Update the evaluator's evaluation for knowledge based questions
+        for (const response of responses) {
+            console.log(response)
+            const questionIndex = selfAppraisal.knowledgeParameterQuestions.findIndex(
+                (question) => question.questionText === response.question
+            );
+            console.log(questionIndex)
+            if (questionIndex !== -1) {
+                // Update the evaluator score for the corresponding question
+                selfAppraisal.knowledgeParameterQuestions[questionIndex].evaluatorScore = response.score;
+            }
+        }
+
+        // Save the updated SelfAppraisal document
+        await selfAppraisal.save();
+
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while evaluating responsibility fulfillment questions.' });
+    }
+});
 module.exports = router;

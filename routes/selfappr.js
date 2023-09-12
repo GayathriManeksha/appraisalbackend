@@ -5,26 +5,29 @@ const HRKnowledgeQuestions = require('../models/knowldegeqn');
 const PredefinedQuestions = require('../models/predefinedqn');
 
 // Endpoint to fill and store basic information
-router.post('/self-appraise/basic-info', (req, res) => {
-    const { userId, name, position, periodUnderReview, dateOccupiedPosition, anyotherposition } = req.body;
+router.post('/self-appraise/basic-info', async (req, res) => {
+    try {
+        const { userId, Name, position, periodUnderReview, dateOccupiedPosition, anyotherposition } = req.body;
 
-    const selfAppraisal = new SelfAppraisal({
-        userId,
-        name,
-        position,
-        periodUnderReview,
-        dateOccupiedPosition,
-        anyotherposition,
-    });
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
 
-    selfAppraisal.save((err) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'An error occurred while saving basic information.' });
+        if (!selfAppraisal) {
+            return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
 
+        selfAppraisal.Name = Name,
+        selfAppraisal.position = position,
+        selfAppraisal.periodUnderReview = periodUnderReview,
+        selfAppraisal.dateOccupiedPosition = dateOccupiedPosition,
+        selfAppraisal.anyotherposition = anyotherposition,
+
+        await selfAppraisal.save();
         res.status(200).json({ success: true });
-    });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while saving Responsibility Fulfillment answers.' });
+    }
 });
 
 // Endpoint to fill and store questions for Responsibility Fulfillment
@@ -139,10 +142,13 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 // API to get role-based questions
 router.get('/get-position-based-questions', async (req, res) => {
     try {
-        const { role } = req.body;
+        const { userId } = req.body;
 
+        // Find the SelfAppraisal document by userId
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
         // Find HRKnowledgeQuestions document for the specified role
-        const hrKnowledgeQuestions = await HRKnowledgeQuestions.findOne({ role });
+        console.log(selfAppraisal.position);
+        const hrKnowledgeQuestions = await HRKnowledgeQuestions.findOne({ role: selfAppraisal.position });
 
         if (!hrKnowledgeQuestions) {
             return res.status(404).json({ error: 'Questions not found for this role.' });
@@ -154,6 +160,39 @@ router.get('/get-position-based-questions', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while fetching role-based questions.' });
+    }
+});
+
+//self evaluate position based questions
+router.post('/evaluate-position-based', async (req, res) => {
+    try {
+        const { userId, responses } = req.body;
+
+        // Find the SelfAppraisal document by userId
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+
+        if (!selfAppraisal) {
+            return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
+        }
+
+        const knowledgeParameterQuestions = responses.map((response) => {
+            return {
+                questionText: response.text,
+                selfScore: response.score,
+                evaluatorScore: null, // Initialize evaluator score as null
+                reviewerScore: null, // Initialize reviewer score as null
+            };
+        });
+        // Push the provided scores into the knowledgeParameterQuestions array
+        selfAppraisal.knowledgeParameterQuestions = knowledgeParameterQuestions;
+
+        // Save the updated SelfAppraisal document
+        await selfAppraisal.save();
+
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while saving self scores for knowledge parameter questions.' });
     }
 });
 

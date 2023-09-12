@@ -78,30 +78,6 @@ router.post('/add-position-based-question', async (req, res) => {
     }
 });
 
-// Endpoint to retrieve all questions
-router.get('/questions', (req, res) => {
-    PredefinedQuestions.find({}, (err, predefinedQuestions) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'An error occurred while fetching questions.' });
-        }
-
-        HRKnowledgeQuestions.find({}, (err, roleBasedQuestions) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: 'An error occurred while fetching role-based questions.' });
-            }
-
-            // Combine and send all questions as a response
-            const allQuestions = {
-                predefinedQuestions: predefinedQuestions || [],
-                roleBasedQuestions: roleBasedQuestions || [],
-            };
-
-            res.status(200).json(allQuestions);
-        });
-    });
-});
 
 // API to add a new user by HR
 router.post('/add-user', async (req, res) => {
