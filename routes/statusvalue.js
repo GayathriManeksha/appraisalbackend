@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const SelfAppraisal = require('./selfAppraisalModel'); // Import your SelfAppraisal model
+const SelfAppraisal = require('../models/selfAppr');// Import your SelfAppraisal model
 
 // API endpoint to get the status value of a self-appraisal by userId
 router.get('/get-status/:userId', async (req, res) => {

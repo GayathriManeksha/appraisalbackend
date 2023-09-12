@@ -7,7 +7,8 @@ const PredefinedQuestions = require('../models/predefinedqn');
 // Endpoint to fill and store basic information
 router.post('/self-appraise/basic-info', async (req, res) => {
     try {
-        const { userId, Name, position, periodUnderReview, dateOccupiedPosition, anyotherposition } = req.body;
+        const userId = req.userid;
+        const {Name, position, periodUnderReview, dateOccupiedPosition, anyotherposition } = req.body;
 
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
 
@@ -33,7 +34,8 @@ router.post('/self-appraise/basic-info', async (req, res) => {
 // Endpoint to fill and store questions for Responsibility Fulfillment
 router.post('/responsibility-fulfillment', async (req, res) => {
     try {
-        const { userId, responsibilities } = req.body;
+        const userId = req.userid;
+        const {responsibilities } = req.body;
 
         // Create a structuredResponsibilities array
         const structuredResponsibilities = responsibilities.map((responsibility) => ({
@@ -76,15 +78,15 @@ router.post('/responsibility-fulfillment', async (req, res) => {
 // Endpoint to retrieve customized questions for Knowledge Parameters based on the user's role
 router.get('/self-appraise/knowledge-questions/:role', (req, res) => {
     const role = req.params.role;
+    const userId = req.userid;
+    // HRKnowledgeQuestions.findOne({ role }, (err, knowledgeQuestions) => {
+    //     if (err) {
+    //         console.error(err);
+    //         return res.status(500).json({ error: 'An error occurred while fetching Knowledge Questions.' });
+    //     }
 
-    HRKnowledgeQuestions.findOne({ role }, (err, knowledgeQuestions) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'An error occurred while fetching Knowledge Questions.' });
-        }
-
-        res.status(200).json({ questions: knowledgeQuestions ? knowledgeQuestions.questions : [] });
-    });
+    //     res.status(200).json({ questions: knowledgeQuestions ? knowledgeQuestions.questions : [] });
+    // });
 });
 
 // API to get predefined questions
@@ -107,7 +109,8 @@ router.get('/predefined-questions', async (req, res) => {
 
 router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
     try {
-        const { userId, responses } = req.body;
+        const userId = req.userid;
+        const { responses } = req.body;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -142,7 +145,8 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 // API to get role-based questions
 router.get('/get-position-based-questions', async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.userid;
+        // const { userId } = req.body;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -166,7 +170,8 @@ router.get('/get-position-based-questions', async (req, res) => {
 //self evaluate position based questions
 router.post('/evaluate-position-based', async (req, res) => {
     try {
-        const { userId, responses } = req.body;
+        const userId = req.userid;
+        const {responses } = req.body;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -199,7 +204,8 @@ router.post('/evaluate-position-based', async (req, res) => {
 // API endpoint for the self to evaluate responsibility fulfillment questions and submit scores
 router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
     try {
-        const { userId, responses } = req.body;
+        const userId = req.userid;
+        const { responses } = req.body;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });

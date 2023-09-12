@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken'); // You'll need to install and configure JWT for authentication
-const User = require('./userModel'); // Import your User model
+const User = require('../models/user');; // Import your User model
 
 // API for user login
 router.post('/login', async (req, res) => {
@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
         }
 
         // Generate a JWT token for authentication
-        const token = jwt.sign({ userId: user.userId, role: user.role }, 'your-secret-key'); // Replace with your secret key
+        const token = jwt.sign({ userId: user._id}, 'your-secret-key'); // Replace with your secret key
 
         // Return the user's role along with the token
         res.status(200).json({ role: user.role, token });

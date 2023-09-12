@@ -5,7 +5,8 @@ const SelfAppraisal = require('../models/selfAppr'); // Import your SelfAppraisa
 // Define a route to list profiles for a reviewer to review
 router.get('/profiles/:reviewerUserId', (req, res) => {
     // Extract the reviewer's userId from the request parameters
-    const reviewerUserId = req.params.reviewerUserId;
+    // const reviewerUserId = req.params.reviewerUserId;
+    const reviewerUserId = req.userid;
 
     // Use Mongoose to query self-appraisal profiles for review
     SelfAppraisal.find({ reviewid: reviewerUserId }, (err, profiles) => {
@@ -22,6 +23,7 @@ router.get('/profiles/:reviewerUserId', (req, res) => {
 
 router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
     try {
+        const reviewerUserId = req.userid;
         const { userId, responses } = req.body;
 
         // Find the SelfAppraisal document by userId
@@ -55,6 +57,7 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 
 router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
     try {
+        const reviewerUserId = req.userid;
         const { userId, responses } = req.body;
 
         // Find the SelfAppraisal document by userId
@@ -89,6 +92,7 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
 // API endpoint for the reviewer to evaluate knowledge based questions and submit scores
 router.post('/evaluate-knowledge-based', async (req, res) => {
     try {
+        const reviewerUserId = req.userid;
         const { userId, responses } = req.body;
 
         // Find the SelfAppraisal document by userId

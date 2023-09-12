@@ -5,7 +5,9 @@ const SelfAppraisal = require('../models/selfAppr'); // Import your SelfAppraisa
 // Define a route to list profiles for an evaluator to evaluate
 router.get('/profiles/:evaluatorUserId', (req, res) => {
     // Extract the evaluator's userId from the request parameters
-    const evaluatorUserId = req.params.evaluatorUserId;
+    // const evaluatorUserId = req.params.evaluatorUserId;
+    const evaluatorUserId = req.userid;
+
 
     // Use Mongoose to query self-appraisal profiles for evaluation
     SelfAppraisal.find({ evaluationid: evaluatorUserId }, (err, profiles) => {
@@ -24,6 +26,7 @@ router.get('/profiles/:evaluatorUserId', (req, res) => {
 router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
     try {
         const { userId, responses } = req.body;
+        const evaluatorUserId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -60,6 +63,7 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 router.post('/evaluate-responsibilities', async (req, res) => {
     try {
         const { userId, responses } = req.body;
+        const evaluatorUserId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -100,6 +104,7 @@ router.post('/evaluate-responsibilities', async (req, res) => {
 router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
     try {
         const { userId, responses } = req.body;
+        const evaluatorUserId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -134,6 +139,7 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
 router.post('/evaluate-knowledge-based', async (req, res) => {
     try {
         const { userId, responses } = req.body;
+        const evaluatorUserId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });

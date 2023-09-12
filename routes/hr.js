@@ -9,6 +9,7 @@ const User = require('../models/user'); // Import your User model
 // API to add a new predefined question
 router.post('/add-predefined-question', async (req, res) => {
     try {
+        const id = req.userid;
         const { questionText } = req.body;
 
         // Find the predefined questions document
@@ -33,6 +34,7 @@ router.post('/add-predefined-question', async (req, res) => {
 
 router.get('/predefined-questions', async (req, res) => {
     try {
+        const id = req.userid;
         // Find the predefined questions document
         const predefinedQuestions = await PredefinedQuestions.findOne();
 
@@ -52,6 +54,7 @@ router.get('/predefined-questions', async (req, res) => {
 // Endpoint for HR to save role-based questions
 router.post('/add-position-based-question', async (req, res) => {
     try {
+        const id = req.userid;
         const { role, question } = req.body;
 
         // Find or create an HRKnowledgeQuestions document for the specified role
@@ -82,6 +85,7 @@ router.post('/add-position-based-question', async (req, res) => {
 // API to add a new user by HR
 router.post('/add-user', async (req, res) => {
     try {
+        const id = req.userid;
         const { userId, password, role } = req.body;
 
         // Check if the user already exists
@@ -110,6 +114,7 @@ router.post('/add-user', async (req, res) => {
 
 router.post('/assignto', async (req, res) => {
     try {
+        const id = req.userid;
         const { userId, evaluatorId, reviewerId } = req.body;
 
         // Find the SelfAppraisal document by userId
