@@ -9,7 +9,7 @@ router.get('/profiles', async (req, res) => {
         const reviewerUserId = req.userid;
 
         // Use Mongoose to query self-appraisal profiles for review
-        const profiles = await SelfAppraisal.find({ reviewid: reviewerUserId });
+        const profiles = await SelfAppraisal.find({ reviewid: reviewerUserId }, { Name: 1, userId: 1, _id: 0 });
 
         // Send the list of profiles as a JSON response
         res.json(profiles);
