@@ -3,7 +3,7 @@ const router = express.Router();
 const SelfAppraisal = require('../models/selfAppr'); // Import your SelfAppraisal model
 
 // Define a route to list profiles for a reviewer to review
-router.get('/profiles/:reviewerUserId', (req, res) => {
+router.get('/profiles', (req, res) => {
     // Extract the reviewer's userId from the request parameters
     // const reviewerUserId = req.params.reviewerUserId;
     const reviewerUserId = req.userid;
