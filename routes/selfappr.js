@@ -8,7 +8,7 @@ const PredefinedQuestions = require('../models/predefinedqn');
 router.post('/self-appraise/basic-info', async (req, res) => {
     try {
         const userId = req.userid;
-        const {Name, position, periodUnderReview, dateOccupiedPosition, anyotherposition } = req.body;
+        const { Name, position, periodUnderReview, dateOccupiedPosition, anyotherposition } = req.body;
 
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
 
@@ -17,25 +17,39 @@ router.post('/self-appraise/basic-info', async (req, res) => {
         }
 
         selfAppraisal.Name = Name,
-        selfAppraisal.position = position,
-        selfAppraisal.periodUnderReview = periodUnderReview,
-        selfAppraisal.dateOccupiedPosition = dateOccupiedPosition,
-        selfAppraisal.anyotherposition = anyotherposition,
+            selfAppraisal.position = position,
+            selfAppraisal.periodUnderReview = periodUnderReview,
+            selfAppraisal.dateOccupiedPosition = dateOccupiedPosition,
+            selfAppraisal.anyotherposition = anyotherposition,
 
-        await selfAppraisal.save();
+            await selfAppraisal.save();
         res.status(200).json({ success: true });
     }
     catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'An error occurred while saving Responsibility Fulfillment answers.' });
+        res.status(500).json({ error: 'An error occurred while saving basic info' });
     }
 });
+
+router.post('/basic-info', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const { apprId } = req.body;
+        console.log(apprId)
+        const selfAppraisal = await SelfAppraisal.findOne({ userId: apprId }, { Name: 1, anyotherposition: 1, dateOccupiedPosition: 1, periodUnderReview: 1, position: 1, _id: 0 });
+        res.status(200).json(selfAppraisal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while getting data.' });
+    }
+})
 
 // Endpoint to fill and store questions for Responsibility Fulfillment
 router.post('/responsibility-fulfillment', async (req, res) => {
     try {
         const userId = req.userid;
-        const {responsibilities } = req.body;
+        const { responsibilities } = req.body;
 
         // Create a structuredResponsibilities array
         const structuredResponsibilities = responsibilities.map((responsibility) => ({
@@ -171,7 +185,7 @@ router.get('/get-position-based-questions', async (req, res) => {
 router.post('/evaluate-position-based', async (req, res) => {
     try {
         const userId = req.userid;
-        const {responses } = req.body;
+        const { responses } = req.body;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
