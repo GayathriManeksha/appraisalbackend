@@ -2,26 +2,24 @@ const express = require('express');
 const router = express.Router();
 const SelfAppraisal = require('../models/selfAppr'); // Import your SelfAppraisal model
 
-// Define a route to list profiles for an evaluator to evaluate
-router.get('/profiles', (req, res) => {
-    // Extract the evaluator's userId from the request parameters
-    // const evaluatorUserId = req.params.evaluatorUserId;
-    const evaluatorUserId = req.userid;
 
+// GET profiles for evaluation by an evaluator
+router.get('/profiles', async (req, res) => {
+    try {
+        // Extract the evaluator's userId from the request user data
+        const evaluatorUserId = req.userid;
 
-    // Use Mongoose to query self-appraisal profiles for evaluation
-    SelfAppraisal.find({ evaluationid: evaluatorUserId }, (err, profiles) => {
-        if (err) {
-            // Handle the error and send an error response
-            console.error(err);
-            return res.status(500).json({ error: 'An error occurred while fetching profiles.' });
-        }
+        // Use Mongoose to query self-appraisal profiles for evaluation
+        const profiles = await SelfAppraisal.find({ evaluationid: evaluatorUserId });
 
         // Send the list of profiles as a JSON response
         res.json(profiles);
-    });
+    } catch (err) {
+        // Handle any errors and send an error response
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while fetching profiles.' });
+    }
 });
-
 // API to save evaluator's responses to evaluation questions
 router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
     try {
