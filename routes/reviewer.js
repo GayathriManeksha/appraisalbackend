@@ -72,7 +72,7 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
             const questionIndex = selfAppraisal.responsibilityFulfillmentQuestions.findIndex(
                 (question) => question.questionText === response.question
             );
-
+            console.log(questionIndex)
             if (questionIndex !== -1) {
                 // Update the reviewer score for the corresponding question
                 selfAppraisal.responsibilityFulfillmentQuestions[questionIndex].reviewerScore = response.score;
@@ -124,4 +124,51 @@ router.post('/evaluate-knowledge-based', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while evaluating responsibility fulfillment questions.' });
     }
 });
+
+router.post('/get-professional-integrity', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const { apprId } = req.body;
+        console.log(apprId)
+        const selfAppraisal = await SelfAppraisal.findOne({ userId: apprId }, { professionalIntegrityQuestions: 1, _id: 0 });
+        res.status(200).json(selfAppraisal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while getting data.' });
+    }
+})
+
+router.post('/get-knowledge-based', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const { apprId } = req.body;
+        console.log(apprId)
+        const selfAppraisal = await SelfAppraisal.findOne({ userId: apprId }, {
+            knowledgeParameterQuestions: 1, _id: 0
+        });
+        res.status(200).json(selfAppraisal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while getting data.' });
+    }
+})
+
+router.post('/get-responsibility-based', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const { apprId } = req.body;
+        console.log(apprId)
+        const selfAppraisal = await SelfAppraisal.findOne({ userId: apprId }, {
+            responsibilityFulfillmentQuestions: 1, _id: 0
+        });
+        res.status(200).json(selfAppraisal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while getting data.' });
+    }
+})
+
 module.exports = router;
