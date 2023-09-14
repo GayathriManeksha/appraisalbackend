@@ -56,7 +56,7 @@ app.use("/feedbackRouter", verifyToken, feedbackRouter);
 
 
 //console.log(process.env.url)
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.url);
 
 
 app.listen(3004, () => {
