@@ -17,11 +17,15 @@ router.get('/get-table-data/:userId', async (req, res) => {
             const { selfScore, evaluatorScore, reviewerScore } = category;
             return selfScore + evaluatorScore + reviewerScore;
         };
+        const professionalIntegrityMaxScore = selfAppraisal.professionalIntegrityQuestions.length * 5; // Assuming each question has a max score of 5
+        const knowledgeParametersMaxScore = selfAppraisal.knowledgeParameterQuestions.length * 5;
+        const responsibilityFulfillmentMaxScore = selfAppraisal.responsibilityFulfillmentQuestions.length * 5;
+
 
         // Extract the total scores for each category by self, review, and evaluator
         const tableData = {
             professionalIntegrity: {
-                maxScore: 50,
+                maxScore:professionalIntegrityMaxScore ,
                 selfScore: selfAppraisal.professionalIntegrityQuestionsTotal.selfScore,
                 evaluatorScore: selfAppraisal.professionalIntegrityQuestionsTotal.evaluatorScore,
                 reviewerScore: selfAppraisal.professionalIntegrityQuestionsTotal.reviewerScore,
@@ -29,7 +33,7 @@ router.get('/get-table-data/:userId', async (req, res) => {
                 comments: '', // You can retrieve comments if available
             },
             knowledgeParameters: {
-                maxScore: 50,
+                maxScore: knowledgeParametersMaxScore,
                 selfScore: selfAppraisal.knowledgeParameterQuestionsTotal.selfScore,
                 evaluatorScore: selfAppraisal.knowledgeParameterQuestionsTotal.evaluatorScore,
                 reviewerScore: selfAppraisal.knowledgeParameterQuestionsTotal.reviewerScore,
@@ -37,7 +41,7 @@ router.get('/get-table-data/:userId', async (req, res) => {
                 comments: '', // You can retrieve comments if available
             },
             responsibilityFulfillment: {
-                maxScore: 100,
+                maxScore: responsibilityFulfillmentMaxScore,
                 selfScore: selfAppraisal.responsibilityFulfillmentQuestionsTotal.selfScore,
                 evaluatorScore: selfAppraisal.responsibilityFulfillmentQuestionsTotal.evaluatorScore,
                 reviewerScore: selfAppraisal.responsibilityFulfillmentQuestionsTotal.reviewerScore,
