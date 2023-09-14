@@ -50,6 +50,7 @@ router.post('/responsibility-fulfillment', async (req, res) => {
     try {
         const userId = req.userid;
         const { responsibilities } = req.body;
+        console.log(responsibilities)
 
         // Create a structuredResponsibilities array
         const structuredResponsibilities = responsibilities.map((responsibility) => ({
@@ -133,11 +134,17 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
 
+        // Initialize total self score
+        let totalSelfScore = 0;
+
         // Map responses to the question schema and add them to the professionalIntegrityQuestions array
         const professionalIntegrityQuestions = responses.map((response) => {
+            const selfScore = parseInt(response.score, 10);
+            totalSelfScore += selfScore; // Update the total self score
+
             return {
                 questionText: response.text,
-                selfScore: response.score,
+                selfScore,
                 evaluatorScore: null, // Initialize evaluator score as null
                 reviewerScore: null, // Initialize reviewer score as null
             };
@@ -145,6 +152,9 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 
         // Update the professionalIntegrityQuestions array in the SelfAppraisal document
         selfAppraisal.professionalIntegrityQuestions = professionalIntegrityQuestions;
+
+        // Update the total self score in the SelfAppraisal document
+        selfAppraisal.professionalIntegrityQuestionsTotal.selfScore = totalSelfScore;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -155,6 +165,7 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while saving professional integrity questions and self-evaluation scores.' });
     }
 });
+
 
 // API to get role-based questions
 router.get('/get-position-based-questions', async (req, res) => {
@@ -194,16 +205,27 @@ router.post('/evaluate-position-based', async (req, res) => {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
 
+        // Initialize total self score
+        let totalSelfScore = 0;
+
+        // Map responses to the question schema and add them to the knowledgeParameterQuestions array
         const knowledgeParameterQuestions = responses.map((response) => {
+            const selfScore = parseInt(response.score, 10);;
+            totalSelfScore += selfScore; // Update the total self score
+
             return {
                 questionText: response.text,
-                selfScore: response.score,
+                selfScore,
                 evaluatorScore: null, // Initialize evaluator score as null
                 reviewerScore: null, // Initialize reviewer score as null
             };
         });
-        // Push the provided scores into the knowledgeParameterQuestions array
+
+        // Update the knowledgeParameterQuestions array in the SelfAppraisal document
         selfAppraisal.knowledgeParameterQuestions = knowledgeParameterQuestions;
+
+        // Update the total self score in the SelfAppraisal document
+        selfAppraisal.knowledgeParameterQuestionsTotal.selfScore = totalSelfScore;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -214,6 +236,7 @@ router.post('/evaluate-position-based', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while saving self scores for knowledge parameter questions.' });
     }
 });
+
 
 // API endpoint for the self to evaluate responsibility fulfillment questions and submit scores
 router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
@@ -228,6 +251,9 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
 
+        // Initialize total self score
+        let totalSelfScore = 0;
+
         // Update the self's evaluation for responsibility fulfillment questions
         for (const response of responses) {
             const questionIndex = selfAppraisal.responsibilityFulfillmentQuestions.findIndex(
@@ -236,10 +262,14 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
 
             if (questionIndex !== -1) {
                 // Update the self score for the corresponding question
-                selfAppraisal.responsibilityFulfillmentQuestions[questionIndex].selfScore = response.score;
+                const score = parseInt(response.score, 10);
+                selfAppraisal.responsibilityFulfillmentQuestions[questionIndex].selfScore = score;
+                // Update the total self score
+                totalSelfScore += score;
             }
         }
-
+        // Update the total self score in the SelfAppraisal document
+        selfAppraisal.responsibilityFulfillmentQuestionsTotal.selfScore = totalSelfScore;
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
 

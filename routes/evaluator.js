@@ -24,7 +24,7 @@ router.get('/profiles', async (req, res) => {
     }
 });
 
-// API to save evaluator's responses to evaluation questions
+// API endpoint for the evaluator to evaluate professional integrity parameter questions and submit scores
 router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
     try {
         const { userId, responses } = req.body;
@@ -37,19 +37,26 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
 
-        // Update the evaluatorScore in the professionalIntegrityQuestions based on the provided responses
+        // Initialize total evaluator score
+        let totalEvaluatorScore = 0;
+
+        // Map responses to the question schema and update the evaluator score
         for (const response of responses) {
-            console.log(response.text)
-            const questionIndex = selfAppraisal.professionalIntegrityQuestions.findIndex((question) => {
-                return question.questionText === response.text;
-            });
+            console.log(response)
+            const questionIndex = selfAppraisal.professionalIntegrityQuestions.findIndex(
+                (question) => question.questionText === response.text
+            );
 
             if (questionIndex !== -1) {
-                // Update the evaluatorScore for the found question
-                console.log(selfAppraisal.professionalIntegrityQuestions[questionIndex])
-                selfAppraisal.professionalIntegrityQuestions[questionIndex].evaluatorScore = response.score;
+                // Update the evaluator score for the found question
+                const score = parseInt(response.score, 10);
+                selfAppraisal.professionalIntegrityQuestions[questionIndex].evaluatorScore = score;
+                totalEvaluatorScore += score; // Update the total evaluator score
             }
         }
+
+        // Update the total evaluator score in the SelfAppraisal document
+        selfAppraisal.professionalIntegrityQuestionsTotal.evaluatorScore = totalEvaluatorScore;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -76,6 +83,7 @@ router.post('/evaluate-responsibilities', async (req, res) => {
 
         // Update the evaluation of responsibilities
         for (const response of responses) {
+            console.log(response)
             const responsibilityIndex = selfAppraisal.responsibilities.findIndex(
                 (responsibility) => responsibility.text === response.text
             );
@@ -115,17 +123,25 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
 
-        // Update the evaluator's evaluation for responsibility fulfillment questions
+        // Initialize total evaluator score
+        let totalEvaluatorScore = 0;
+
+        // Map responses to the question schema and update the evaluator score
         for (const response of responses) {
             const questionIndex = selfAppraisal.responsibilityFulfillmentQuestions.findIndex(
                 (question) => question.questionText === response.question
             );
 
             if (questionIndex !== -1) {
-                // Update the evaluator score for the corresponding question
-                selfAppraisal.responsibilityFulfillmentQuestions[questionIndex].evaluatorScore = response.score;
+                // Update the evaluator score for the found question
+                const score = parseInt(response.score, 10);
+                selfAppraisal.responsibilityFulfillmentQuestions[questionIndex].evaluatorScore = score;
+                totalEvaluatorScore += score; // Update the total evaluator score
             }
         }
+        console.log(totalEvaluatorScore)
+        // Update the total evaluator score in the SelfAppraisal document
+        selfAppraisal.responsibilityFulfillmentQuestionsTotal.evaluatorScore = totalEvaluatorScore;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -137,7 +153,8 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
     }
 });
 
-// API endpoint for the evaluator to evaluate knowledge based questions and submit scores
+
+// API endpoint for the evaluator to evaluate knowledge-based questions and submit scores
 router.post('/evaluate-knowledge-based', async (req, res) => {
     try {
         const { userId, responses } = req.body;
@@ -150,18 +167,26 @@ router.post('/evaluate-knowledge-based', async (req, res) => {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
 
-        // Update the evaluator's evaluation for knowledge based questions
+        // Initialize total evaluator score
+        let totalEvaluatorScore = 0;
+
+        // Map responses to the question schema and update the evaluator score
         for (const response of responses) {
             console.log(response)
             const questionIndex = selfAppraisal.knowledgeParameterQuestions.findIndex(
                 (question) => question.questionText === response.question
             );
-            console.log(questionIndex)
+
             if (questionIndex !== -1) {
-                // Update the evaluator score for the corresponding question
-                selfAppraisal.knowledgeParameterQuestions[questionIndex].evaluatorScore = response.score;
+                // Update the evaluator score for the found question
+                const score = parseInt(response.score, 10);
+                selfAppraisal.knowledgeParameterQuestions[questionIndex].evaluatorScore = score;
+                totalEvaluatorScore += score; // Update the total evaluator score
             }
         }
+
+        // Update the total evaluator score in the SelfAppraisal document
+        selfAppraisal.knowledgeParameterQuestionsTotal.evaluatorScore = totalEvaluatorScore;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -169,7 +194,7 @@ router.post('/evaluate-knowledge-based', async (req, res) => {
         res.status(200).json({ success: true });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'An error occurred while evaluating responsibility fulfillment questions.' });
+        res.status(500).json({ error: 'An error occurred while evaluating knowledge-based questions.' });
     }
 });
 

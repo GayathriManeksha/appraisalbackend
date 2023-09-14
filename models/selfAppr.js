@@ -32,7 +32,23 @@ const selfAppraisalSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    stage: { type: Number, default: 1 }
+    stage: { type: Number, default: 1 },
+    // Add total attributes for each category
+    professionalIntegrityQuestionsTotal: {
+        selfScore: Number,
+        evaluatorScore: Number,
+        reviewerScore: Number,
+    },
+    responsibilityFulfillmentQuestionsTotal: {
+        selfScore: Number,
+        evaluatorScore: Number,
+        reviewerScore: Number,
+    },
+    knowledgeParameterQuestionsTotal: {
+        selfScore: Number,
+        evaluatorScore: Number,
+        reviewerScore: Number,
+    },
 });
 
 const SelfAppraisal = mongoose.model('SelfAppraisal', selfAppraisalSchema);
