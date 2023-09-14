@@ -1,4 +1,7 @@
-const SelfAppraisal = require('../models/SelfAppraisal');
+const express = require('express');
+const router = express.Router();
+
+const SelfAppraisal = require('../models/selfAppr');
 
 // Create a route to retrieve data for the table
 router.get('/get-table-data/:userId', async (req, res) => {
@@ -56,3 +59,4 @@ router.get('/get-table-data/:userId', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching table data.' });
     }
 });
+module.exports = router;

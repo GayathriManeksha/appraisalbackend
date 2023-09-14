@@ -44,3 +44,4 @@ router.get('/get-recommendations/:appraiseeId', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching recommendations.' });
     }
 });
+module.exports = router;

@@ -1,4 +1,4 @@
-const Recommendation = require('../models/Recommendation');
+const Recommendation = require('../models/recommendations');
 const PerformanceAppraisal = require('../models/performanceappraisal');
 
 

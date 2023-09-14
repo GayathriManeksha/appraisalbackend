@@ -23,4 +23,7 @@ router.post('/submit-feedback', async (req, res) => {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while saving feedback.' });
     }
+    console.log(req.body);
+
 });
+module.exports = router;
