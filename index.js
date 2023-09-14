@@ -12,6 +12,10 @@ const selfRouter = require('./routes/selfappr')
 const hrRouter = require('./routes/hr')
 const finalRouter = require('./routes/finalsubmit')
 const statusRouter = require('./routes/statusvalue')
+const feedbackRouter = require('./routes/feedback')
+const performanceappraisalRouter = require('./routes/performanceappraisal')
+const recommendationRouter = require('./routes/recommendation')
+const summaryRouter = require('./routes/summary')
 
 const cors = require("cors");
 app.use(express.json());
@@ -45,6 +49,11 @@ app.use("/self", verifyToken, selfRouter);
 app.use("/hr", verifyToken, hrRouter);
 app.use("/finalsubmit", verifyToken, finalRouter);
 app.use("/status", verifyToken, statusRouter);
+app.use("/summary", verifyToken, summaryRouter);
+app.use("/recommendation", verifyToken, recommendationRouter);
+app.use("/performanceappraisal", verifyToken, performanceappraisalRouter);
+app.use("/feedbackRouter", verifyToken, feedbackRouter);
+
 
 //console.log(process.env.url)
 mongoose.connect(process.env.url);
