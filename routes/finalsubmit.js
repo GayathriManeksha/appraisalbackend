@@ -105,7 +105,7 @@ router.put('/final-review-completed/:userId', async (req, res) => {
     }
 });
 
-routes.get('/stage', async (req, res) => {
+router.get('/stage', async (req, res) => {
     try {
         const { userId } = req.params;
         // Find the SelfAppraisal document by userId
