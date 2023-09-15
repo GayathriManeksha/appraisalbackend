@@ -35,19 +35,19 @@ const selfAppraisalSchema = new mongoose.Schema({
     stage: { type: Number, default: 0 },
     // Add total attributes for each category
     professionalIntegrityQuestionsTotal: {
-        selfScore: {type:Number,default:null},
-        evaluatorScore: { type: Number, default: null },
-        reviewerScore: { type: Number, default: null },
+        selfScore: Number,
+        evaluatorScore: Number,
+        reviewerScore: Number,
     },
     responsibilityFulfillmentQuestionsTotal: {
-        selfScore: { type: Number, default: null },
-        evaluatorScore: { type: Number, default: null },
-        reviewerScore: { type: Number, default: null },
+        selfScore: Number,
+        evaluatorScore: Number,
+        reviewerScore: Number,
     },
     knowledgeParameterQuestionsTotal: {
-        selfScore: { type: Number, default: null },
-        evaluatorScore: { type: Number, default: null },
-        reviewerScore: { type: Number, default: null },
+        selfScore: Number,
+        evaluatorScore: Number,
+        reviewerScore: Number,
     },
 });
 

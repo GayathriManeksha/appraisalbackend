@@ -99,25 +99,13 @@ router.post('/responsibility-fulfillment', async (req, res) => {
     }
 });
 
-router.get('/responsibilities', async (req, res) => {
-    try {
+router.get('/responsibilities',async(req,res)=>{
+    try{
         const userId = req.userid;
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
         res.status(200).json(selfAppraisal.responsibilities);
     }
-    catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'An error occurred while fetching' });
-    }
-});
-
-router.get('/responsibilities-questions', async (req, res) => {
-    try {
-        const userId = req.userid;
-        const selfAppraisal = await SelfAppraisal.findOne({ userId });
-        res.status(200).json(selfAppraisal.responsibilityFulfillmentQuestionsTotal);
-    }
-    catch (err) {
+    catch(err){
         console.error(err);
         res.status(500).json({ error: 'An error occurred while fetching' });
     }
@@ -187,8 +175,6 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 
         // Update the total self score in the SelfAppraisal document
         selfAppraisal.professionalIntegrityQuestionsTotal.selfScore = totalSelfScore;
-        selfAppraisal.professionalIntegrityQuestionsTotal.evaluatorScore = null;
-        selfAppraisal.professionalIntegrityQuestionsTotal.reviewerScore = null;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -260,8 +246,6 @@ router.post('/evaluate-position-based', async (req, res) => {
 
         // Update the total self score in the SelfAppraisal document
         selfAppraisal.knowledgeParameterQuestionsTotal.selfScore = totalSelfScore;
-        selfAppraisal.knowledgeParameterQuestionsTotal.evaluatorScore = null;
-        selfAppraisal.knowledgeParameterQuestionsTotal.reviewerScore = null;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -306,8 +290,6 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
         }
         // Update the total self score in the SelfAppraisal document
         selfAppraisal.responsibilityFulfillmentQuestionsTotal.selfScore = totalSelfScore;
-        selfAppraisal.responsibilityFulfillmentQuestionsTotal.evaluatorScore = null;
-        selfAppraisal.responsibilityFulfillmentQuestionsTotal.reviewerScore = null;
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
 
