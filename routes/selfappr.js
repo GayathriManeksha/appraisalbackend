@@ -99,7 +99,17 @@ router.post('/responsibility-fulfillment', async (req, res) => {
     }
 });
 
-
+router.get('/responsibilities',async(req,res)=>{
+    try{
+        const userId = req.userid;
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+        res.status(200).json(selfAppraisal.responsibilities);
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while fetching' });
+    }
+});
 // Endpoint to retrieve customized questions for Knowledge Parameters based on the user's role
 router.get('/self-appraise/knowledge-questions/:role', (req, res) => {
     const role = req.params.role;
