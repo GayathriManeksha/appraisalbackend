@@ -44,7 +44,17 @@ router.post('/basic-info', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while getting data.' });
     }
 })
-
+router.get('/basic-info', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const selfAppraisal = await SelfAppraisal.findOne({ userId }, { Name: 1, anyotherposition: 1, dateOccupiedPosition: 1, periodUnderReview: 1, position: 1, _id: 0 });
+        res.status(200).json(selfAppraisal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while getting data.' });
+    }
+})
 // Endpoint to fill and store questions for Responsibility Fulfillment
 router.post('/responsibility-fulfillment', async (req, res) => {
     try {
@@ -54,15 +64,15 @@ router.post('/responsibility-fulfillment', async (req, res) => {
 
         // Create a structuredResponsibilities array
         const structuredResponsibilities = responsibilities.map((responsibility) => ({
-            text: responsibility.text,
-            selfAppraisal: responsibility.selfAppraisal,
+            text: responsibility.question,
+            selfAppraisal: responsibility.score,
             evaluation: null,
             comments: null,
         }));
 
         // Create an array of questions for responsibility fulfillment
         const questions = responsibilities.map((responsibility) => ({
-            questionText: responsibility.text,
+            questionText: responsibility.question,
             selfScore: null,
             evaluatorScore: null,
             reviewerScore: null,
@@ -89,7 +99,29 @@ router.post('/responsibility-fulfillment', async (req, res) => {
     }
 });
 
+router.get('/responsibilities', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+        res.status(200).json(selfAppraisal.responsibilities);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while fetching' });
+    }
+});
 
+router.get('/responsibilities-questions', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+        res.status(200).json(selfAppraisal.responsibilityFulfillmentQuestionsTotal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while fetching' });
+    }
+});
 // Endpoint to retrieve customized questions for Knowledge Parameters based on the user's role
 router.get('/self-appraise/knowledge-questions/:role', (req, res) => {
     const role = req.params.role;
@@ -155,6 +187,8 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 
         // Update the total self score in the SelfAppraisal document
         selfAppraisal.professionalIntegrityQuestionsTotal.selfScore = totalSelfScore;
+        selfAppraisal.professionalIntegrityQuestionsTotal.evaluatorScore = null;
+        selfAppraisal.professionalIntegrityQuestionsTotal.reviewerScore = null;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -226,6 +260,8 @@ router.post('/evaluate-position-based', async (req, res) => {
 
         // Update the total self score in the SelfAppraisal document
         selfAppraisal.knowledgeParameterQuestionsTotal.selfScore = totalSelfScore;
+        selfAppraisal.knowledgeParameterQuestionsTotal.evaluatorScore = null;
+        selfAppraisal.knowledgeParameterQuestionsTotal.reviewerScore = null;
 
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
@@ -270,6 +306,8 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
         }
         // Update the total self score in the SelfAppraisal document
         selfAppraisal.responsibilityFulfillmentQuestionsTotal.selfScore = totalSelfScore;
+        selfAppraisal.responsibilityFulfillmentQuestionsTotal.evaluatorScore = null;
+        selfAppraisal.responsibilityFulfillmentQuestionsTotal.reviewerScore = null;
         // Save the updated SelfAppraisal document
         await selfAppraisal.save();
 

@@ -4,9 +4,9 @@ const SelfAppraisal = require('../models/selfAppr');
 
 
 // API endpoint to update status for self-evaluation completion
-router.put('/self-evaluation-completed/:userId', async (req, res) => {
+router.put('/self-evaluation-completed', async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -32,6 +32,7 @@ router.put('/self-evaluation-completed/:userId', async (req, res) => {
 router.put('/evaluation-completed/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
+        const evaluatorId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -57,6 +58,7 @@ router.put('/evaluation-completed/:userId', async (req, res) => {
 router.put('/peer-review-completed/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
+        const peerId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
@@ -81,6 +83,7 @@ router.put('/peer-review-completed/:userId', async (req, res) => {
 router.put('/final-review-completed/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
+        const reviewerId = req.userid;
 
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
