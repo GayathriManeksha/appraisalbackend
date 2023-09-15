@@ -107,14 +107,15 @@ router.put('/final-review-completed/:userId', async (req, res) => {
 
 router.get('/stage', async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId  = req.userid;
         // Find the SelfAppraisal document by userId
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
 
         if (!selfAppraisal) {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
-        res.json({ "stage": selfAppraisal.stage })
+        console.log(selfAppraisal.stage)
+        res.status(200).json({ "stage": selfAppraisal.stage })
     }
     catch (err) {
         console.error(err);
