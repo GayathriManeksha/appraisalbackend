@@ -99,13 +99,13 @@ router.post('/responsibility-fulfillment', async (req, res) => {
     }
 });
 
-router.get('/responsibilities',async(req,res)=>{
-    try{
+router.get('/responsibilities', async (req, res) => {
+    try {
         const userId = req.userid;
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
         res.status(200).json(selfAppraisal.responsibilities);
     }
-    catch(err){
+    catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while fetching' });
     }
@@ -299,4 +299,56 @@ router.post('/evaluate-responsibility-fulfillment', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while self-evaluating responsibility fulfillment questions.' });
     }
 });
+
+router.get('/predefined-scores', async (req, res) => {
+    try {
+        const userId = req.userid;
+
+        // Find the SelfAppraisal document by userId
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+
+        if (!selfAppraisal) {
+            return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
+        }
+        res.status(200).json(selfAppraisal.professionalIntegrityQuestions)
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred ' });
+    }
+})
+router.get('/knowledge-scores', async (req, res) => {
+    try {
+        const userId = req.userid;
+
+        // Find the SelfAppraisal document by userId
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+
+        if (!selfAppraisal) {
+            return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
+        }
+        res.status(200).json(selfAppraisal.knowledgeParameterQuestions)
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred ' });
+    }
+})
+router.get('/responsibility-scores', async (req, res) => {
+    try {
+        const userId = req.userid;
+
+        // Find the SelfAppraisal document by userId
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+
+        if (!selfAppraisal) {
+            return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
+        }
+        res.status(200).json(selfAppraisal.responsibilityFulfillmentQuestions)
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred ' });
+    }
+})
 module.exports = router;
