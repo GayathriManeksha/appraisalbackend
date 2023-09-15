@@ -18,6 +18,7 @@ router.post('/submit-recommendation', async (req, res) => {
 
         // Save the recommendation to the database
         await recommendation.save();
+        console.log(req.body);
 
         res.status(200).json({ success: true });
     } catch (err) {

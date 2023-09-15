@@ -1,17 +1,15 @@
 const Recommendation = require('../models/recommendations');
 const PerformanceAppraisal = require('../models/performanceappraisal');
 
-
-// Assuming you have already defined the PerformanceAppraisal schema and model
-
-// Function to fetch and map recommendations to Performance Appraisal
 async function mapRecommendationsToPerformanceAppraisal(appraiseeId) {
     try {
         // Fetch recommendations for the specified appraisee
         const recommendations = await Recommendation.findOne({ appraiseeId });
 
         if (!recommendations) {
-            return null;
+            // Handle the case where recommendations are not found
+            console.log('Recommendations not found for appraiseeId:', appraiseeId);
+            throw new Error('Recommendations not found for this appraisee.');
         }
 
         // Create an array to store the Performance Appraisal data
@@ -34,7 +32,7 @@ async function mapRecommendationsToPerformanceAppraisal(appraiseeId) {
                     pointToConsider,
                     recommendation,
                     accepted: false, // Initialize to a default value, e.g., "Not Accepted"
-                    actionIfNotAccepted: '', // Default to empty string
+                    actionIfNotAccepted: '', // Default to an empty string
                 };
 
                 // Push the data to the array
@@ -42,14 +40,16 @@ async function mapRecommendationsToPerformanceAppraisal(appraiseeId) {
             }
         });
 
-        // Create or update the Performance Appraisal document with the data
+        // Create a new Performance Appraisal document with the data
         const performanceAppraisal = new PerformanceAppraisal({
             appraiseeId,
             data: performanceAppraisalData,
         });
 
+        // Save the new Performance Appraisal document to the database
         await performanceAppraisal.save();
 
+        // Return the created Performance Appraisal object
         return performanceAppraisal;
     } catch (err) {
         console.error(err);

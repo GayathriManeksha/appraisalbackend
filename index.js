@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config()
 app.use(express.json());
+const cors = require("cors");
+
+app.use(cors());
 //since import is used add .js extension as well
 const loginRouter = require('./routes/login')
 const evaluatorRouter = require('./routes/evaluator')
@@ -17,9 +20,7 @@ const performanceappraisalRouter = require('./routes/performanceappraisal')
 const recommendationRouter = require('./routes/recommendations')
 const summaryRouter = require('./routes/summary')
 
-const cors = require("cors");
 
-app.use(cors());
 
 const secretKey = 'your-secret-key';
 
@@ -52,13 +53,13 @@ app.use("/status", verifyToken, statusRouter);
 app.use("/summary", verifyToken, summaryRouter);
 app.use("/recommendations", verifyToken, recommendationRouter);
 app.use("/performanceappraisal", verifyToken, performanceappraisalRouter);
-app.use("/feedbackRouter", verifyToken, feedbackRouter);
+app.use("/feedbackRouter",verifyToken, feedbackRouter);
 
 
-//console.log(process.env.url)
+console.log(process.env.url)
 mongoose.connect(process.env.MONGODB_URI);
 
 
-app.listen(3004, () => {
+app.listen(3007, () => {
     console.log('Server started on port 3005');
 });
