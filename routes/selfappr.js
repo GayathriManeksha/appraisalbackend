@@ -44,7 +44,17 @@ router.post('/basic-info', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while getting data.' });
     }
 })
-
+router.get('/basic-info', async (req, res) => {
+    try {
+        const userId = req.userid;
+        const selfAppraisal = await SelfAppraisal.findOne({ userId }, { Name: 1, anyotherposition: 1, dateOccupiedPosition: 1, periodUnderReview: 1, position: 1, _id: 0 });
+        res.status(200).json(selfAppraisal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while getting data.' });
+    }
+})
 // Endpoint to fill and store questions for Responsibility Fulfillment
 router.post('/responsibility-fulfillment', async (req, res) => {
     try {
@@ -54,15 +64,15 @@ router.post('/responsibility-fulfillment', async (req, res) => {
 
         // Create a structuredResponsibilities array
         const structuredResponsibilities = responsibilities.map((responsibility) => ({
-            text: responsibility.text,
-            selfAppraisal: responsibility.selfAppraisal,
+            text: responsibility.question,
+            selfAppraisal: responsibility.score,
             evaluation: null,
             comments: null,
         }));
 
         // Create an array of questions for responsibility fulfillment
         const questions = responsibilities.map((responsibility) => ({
-            questionText: responsibility.text,
+            questionText: responsibility.question,
             selfScore: null,
             evaluatorScore: null,
             reviewerScore: null,

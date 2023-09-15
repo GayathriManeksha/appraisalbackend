@@ -7,7 +7,7 @@ const Feedback= require('../models/feedback');
 router.post('/submit-feedback', async (req, res) => {
     try {
         const { appraiseeId, strengths, improvements } = req.body;
-
+        console.log(req.body)
         // Create a new feedback document
         const feedback = new Feedback({
             appraisee: appraiseeId, // Associate feedback with the appraisee

@@ -32,7 +32,7 @@ const selfAppraisalSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    stage: { type: Number, default: 1 },
+    stage: { type: Number, default: 0 },
     // Add total attributes for each category
     professionalIntegrityQuestionsTotal: {
         selfScore: Number,
