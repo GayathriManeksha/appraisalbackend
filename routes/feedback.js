@@ -13,7 +13,7 @@ router.post('/submit-feedback', async (req, res) => {
 
         // Create a new feedback document
         const feedback = new Feedback({
-            appraiseeId, // Associate feedback with the appraisee
+            appraisee: appraiseeId, // Associate feedback with the appraisee
             strengths,
             improvements,
         });
