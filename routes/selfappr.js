@@ -55,6 +55,17 @@ router.get('/basic-info', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while getting data.' });
     }
 })
+router.get('/appr-basic-info/:userId',async(req,res)=>{
+    try {
+        const {userId} = req.params;
+        const selfAppraisal = await SelfAppraisal.findOne({ userId }, { Name: 1, anyotherposition: 1, dateOccupiedPosition: 1, periodUnderReview: 1, position: 1, _id: 0 });
+        res.status(200).json(selfAppraisal);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while getting data.' });
+    }
+});
 // Endpoint to fill and store questions for Responsibility Fulfillment
 router.post('/responsibility-fulfillment', async (req, res) => {
     try {
