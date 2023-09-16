@@ -122,4 +122,23 @@ router.get('/stage', async (req, res) => {
         res.status(500).json({ error: 'An error occurred ' });
     }
 })
+router.get('/stagestatus/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const Id = req.userid;
+
+        // Find the SelfAppraisal document by userId
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+
+        if (!selfAppraisal) {
+            return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
+        }
+        console.log(selfAppraisal.stage)
+        res.status(200).json({ "stage": selfAppraisal.stage })
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred ' });
+    }
+})
 module.exports = router;
