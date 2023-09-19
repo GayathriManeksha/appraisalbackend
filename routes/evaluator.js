@@ -243,4 +243,16 @@ router.post('/get-responsibility-based', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while getting data.' });
     }
 })
+
+router.get('/responsibilities/:userId', async (req, res) => {
+    try {
+         const { userId } = req.params;
+        const selfAppraisal = await SelfAppraisal.findOne({ userId });
+        res.status(200).json(selfAppraisal.responsibilities);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while fetching' });
+    }
+});
 module.exports = router;
