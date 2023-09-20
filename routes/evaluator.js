@@ -70,6 +70,7 @@ router.post('/evaluate-professional-integrity-parameter', async (req, res) => {
 
 // API endpoint for the evaluator to evaluate responsibilities
 router.post('/evaluate-responsibilities', async (req, res) => {
+    ``
     try {
         const { userId, responses } = req.body;
         const evaluatorUserId = req.userid;
@@ -80,22 +81,22 @@ router.post('/evaluate-responsibilities', async (req, res) => {
         if (!selfAppraisal) {
             return res.status(404).json({ error: 'Self Appraisal not found for this user.' });
         }
-
+        console.log(selfAppraisal.responsibilities);
         // Update the evaluation of responsibilities
         for (const response of responses) {
             console.log(response)
             const responsibilityIndex = selfAppraisal.responsibilities.findIndex(
-                (responsibility) => responsibility.text === response.text
+                (responsibility) => responsibility.text === response.responsibility
             );
-
+            console.log(responsibilityIndex);
             if (responsibilityIndex !== -1) {
                 // Update the evaluation based on response.agree
-                selfAppraisal.responsibilities[responsibilityIndex].evaluation = response.agree;
-
+                selfAppraisal.responsibilities[responsibilityIndex].evaluation = response.evaluate;
+                console.log(selfAppraisal.responsibilities[responsibilityIndex].evaluation)
                 // If response.agree is false, save response.comments
-                if (!response.agree) {
+                // if (!(response.comments==="no")) {
                     selfAppraisal.responsibilities[responsibilityIndex].comments = response.comments;
-                }
+                // }
             }
         }
 
@@ -174,7 +175,7 @@ router.post('/evaluate-knowledge-based', async (req, res) => {
         for (const response of responses) {
             console.log(response)
             const questionIndex = selfAppraisal.knowledgeParameterQuestions.findIndex(
-                (question) => question.questionText === response.question
+                (question) => question.questionText === response.text
             );
 
             if (questionIndex !== -1) {
@@ -246,7 +247,7 @@ router.post('/get-responsibility-based', async (req, res) => {
 
 router.get('/responsibilities/:userId', async (req, res) => {
     try {
-         const { userId } = req.params;
+        const { userId } = req.params;
         const selfAppraisal = await SelfAppraisal.findOne({ userId });
         res.status(200).json(selfAppraisal.responsibilities);
     }

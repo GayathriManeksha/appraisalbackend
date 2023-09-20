@@ -3,9 +3,9 @@ const questionSchema = require('./question')
 
 const responsibilitySchema = new mongoose.Schema({
     text: String,
-    selfAppraisal: String,
-    evaluation: Boolean, //string
-    comments: String,
+    selfAppraisal: { type: String, default: null },
+    evaluation: { type: String, default: null }, //string
+    comments: { type: String, default: null },
 });
 
 //Add one more thing status to see in which stage is the evaluation in
