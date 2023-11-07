@@ -16,6 +16,7 @@ const feedbackRouter = require('./routes/feedback')
 const performanceappraisalRouter = require('./routes/performanceappraisal')
 const recommendationRouter = require('./routes/recommendations')
 const summaryRouter = require('./routes/summary')
+const usernameRouter = require('./routes/user')
 
 const cors = require("cors");
 
@@ -53,6 +54,7 @@ app.use("/summary", verifyToken, summaryRouter);
 app.use("/recommendations", verifyToken, recommendationRouter);
 app.use("/performanceappraisal", verifyToken, performanceappraisalRouter);
 app.use("/feedbackRouter", verifyToken, feedbackRouter);
+app.use("/getuname",verifyToken,usernameRouter);
 
 
 //console.log(process.env.url)

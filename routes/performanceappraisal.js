@@ -13,6 +13,7 @@ const PerformanceAppraisal = require('../models/performanceappraisal'); // Impor
 router.post('/save-acceptance-and-action/:appraiseeId', async (req, res) => {
     try {
         const appraiseeId = req.params.appraiseeId;
+        console.log(req.body)
         const { data } = req.body;
 
         // Create an array to store Performance Appraisal data
