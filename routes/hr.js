@@ -153,5 +153,15 @@ router.post('/assignto', async (req, res) => {
     }
 });
 
+router.get('/final-review-completed-users', async (req, res) => {
+    try {
+        // Find all SelfAppraisal documents where the stage is 10 (indicating final review completion)
+        const users = await SelfAppraisal.find({ stage: 10 });
 
+        res.status(200).json({ users });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while fetching users with final review completion status.' });
+    }
+});
 module.exports = router;

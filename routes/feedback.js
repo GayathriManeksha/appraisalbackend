@@ -29,4 +29,13 @@ router.post('/submit-feedback', async (req, res) => {
     console.log(req.body);
 
 });
+router.get('/getfeedback/:appraiseeId', async (req, res) => {
+    try {
+        const appraiseeId = req.params.appraiseeId;
+        const feedback = await Feedback.find(appraiseeId); // Retrieve all feedback from the database
+        res.json(feedback); // Send the retrieved feedback as a JSON response
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' }); // Handle errors
+    }
+});
 module.exports = router;
